@@ -36,7 +36,7 @@ __global__ void imageFilteringKernel( const T *device_f, const unsigned int padd
 
 }
 
-inline unsigned int iDivUp( const unsigned int &a, const unsigned int &b ) 
+inline unsigned int iCalculateGridSize( const unsigned int &a, const unsigned int &b ) 
 { 
 	return ( a%b != 0 ) ? (a/b+1):(a/b); 
 }
@@ -134,12 +134,12 @@ int main( int argc, char *argv[] )
 			checkCudaErrors( cudaMemcpy( device_paddedImage, host_paddedImage, paddedImageSizeByte, cudaMemcpyHostToDevice ) );
 
 			// Set the execution configuration
-			const unsigned int blockW = 32;
-			const unsigned int blockH = 32;
+			const unsigned int blockWidth = 32;
+			const unsigned int blockHeight = 32;
 
-			//const unsigned int threadBlockH = 8;
-			const dim3 grid( iDivUp( imageWidth, blockW ), iDivUp( imageHeight, blockH ) );
-			const dim3 threadBlock( blockW, blockH );
+			//const unsigned int threadblockHeight = 8;
+			const dim3 grid( iCalculateGridSize( imageWidth, blockWidth ), iCalculateGridSize( imageHeight, blockHeight ) );
+			const dim3 threadBlock( blockWidth, blockHeight );
 			
 			// Allocate the memory space for the filter on a device
 			float *device_g;
